@@ -64,7 +64,7 @@
         .post-card button { width: 100%; margin-bottom: 0; }
 
         /* 內聯訊息顯示 */
-        .inline-msg { font-size: 0.9em; font-weight: bold; display: block; text-align: center; margin-top: 5px; min-height: 24px; transition: opacity 0.3s; }
+        .inline-msg { font-size: 0.9em; font-weight: bold; display: block; margin-top: 5px; min-height: 24px; transition: opacity 0.3s; }
         .msg-error { color: var(--danger-color); }
         .msg-success { color: var(--accent-green); }
 
@@ -109,6 +109,9 @@
             .section, .post-card { padding: 25px 20px; } 
             .post-title-row { flex-direction: column; gap: 10px; } 
             #search-section { padding: 25px 20px !important; }
+            #step-1, #step-2 div { flex-direction: column; align-items: stretch; }
+            #email, #otp-code { max-width: 100% !important; }
+            #login-section button { width: 100%; }
         }
     </style>
 </head>
@@ -120,23 +123,23 @@
         <h3 style="margin-top:0;">學員通行證</h3>
         <p id="login-status" style="color: var(--slate-blue); font-size: 0.95em; margin-bottom: 20px;">目前狀態：未登入 (登入解鎖課程並紀錄進度)</p>
         
-        <div id="step-1">
-            <input type="email" id="email" class="input-box" placeholder="輸入會員 Email" style="margin-bottom: 15px;">
-            <button onclick="requestOTP()" id="btn-otp">寄送驗證碼</button>
-            <span id="otp-msg" class="inline-msg"></span>
+        <div id="step-1" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
+            <input type="email" id="email" class="input-box" placeholder="輸入會員 Email" style="flex: 2; max-width: 300px; margin-bottom: 0;">
+            <button onclick="requestOTP()" id="btn-otp" style="flex: 1; margin-bottom: 0;">寄送驗證碼</button>
+            <span id="otp-msg" class="inline-msg" style="width: 100%; text-align: left;"></span>
         </div>
         
         <div id="step-2" style="display: none; margin-top: 10px;">
-            <input type="text" id="otp-code" class="input-box" placeholder="輸入信箱內的 6 位數驗證碼" style="margin-bottom: 15px;">
-            <div style="display: flex; gap: 10px;">
-                <button onclick="verifyLogin()" id="btn-login">登入解鎖</button>
-                <button onclick="cancelLogin()">返回</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
+                <input type="text" id="otp-code" class="input-box" placeholder="輸入信箱內的 6 位數驗證碼" style="flex: 2; max-width: 300px; margin-bottom: 0;">
+                <button onclick="verifyLogin()" id="btn-login" style="flex: 1; margin-bottom: 0;">登入解鎖</button>
+                <button onclick="cancelLogin()" style="flex: 1; margin-bottom: 0;">返回</button>
             </div>
-            <span id="login-msg" class="inline-msg"></span>
+            <span id="login-msg" class="inline-msg" style="width: 100%; text-align: left;"></span>
         </div>
         
         <div style="margin-top: 25px; border-top: 1px dashed var(--glass-border); padding-top: 20px;">
-            <button onclick="logout()">登出</button>
+            <button onclick="logout()" style="width: auto;">登出</button>
         </div>
     </div>
 
@@ -165,15 +168,15 @@
         <div id="comment-section" style="display: none; margin-top: 50px; border-top: 2px dashed var(--glass-border); padding-top: 30px;">
             <h3>💬 課程討論區</h3>
             <div id="comments-list" style="margin-bottom: 20px;"></div>
-            <textarea id="new-comment" class="input-box" placeholder="有什麼問題或收穫嗎？留言吧！" style="height: 80px; margin-bottom: 10px;"></textarea>
+            <textarea id="new-comment" class="input-box" placeholder="有什麼問題或收穫嗎？留言吧！" style="height: 80px; margin-bottom: 15px; resize: vertical;"></textarea>
             <button onclick="submitComment()" id="btn-submit-comment">送出留言</button>
-            <span id="comment-msg" class="inline-msg"></span>
+            <span id="comment-msg" class="inline-msg" style="text-align: left;"></span>
         </div>
     </div>
 
     <script>
         // ⚠️ 請替換為你最新部署的 API 網址
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyovT-GzbgZrC24PepNGsZC_BagUXY4oVyKcfgPz5DGGQ6kLcR_LNxZkwtv9_0Zuuytmg/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbygByJobtLcQIOA9RVETiDaB4K9OFyLA_9Iw1iJ3zGH5bdnRBlOeHZa5SxH0hyvHKfzbQ/exec';
 
         let currentUser = { email: '', verified: false };
         let allClassesData = []; 
@@ -283,7 +286,7 @@
                         <div class="post-title-row"><h3 class="post-title">${post.title}</h3><div>${statusBadge}</div></div>
                         <div class="post-meta"><span class="meta-cat">${post.category||'未分類'}</span><span>👨‍🏫 ${post.author||'講師'}</span></div>
                         <div class="post-excerpt">${post.excerpt||''}</div>
-                        <button onclick="readPost('${post.id}')" style="margin-bottom:0;">進入教室</button>
+                        <button onclick="readPost('${post.id}')">進入教室</button>
                     </div>`;
             });
             if (totalPages > 1) renderPagination(totalPages, paginationContainer);
@@ -341,7 +344,7 @@
                         const isFinished = data.userStatus === '已完課';
                         contentHTML += `
                             <div class="progress-actions">
-                                <button id="btn-finish" class="btn-finish ${isFinished ? 'completed' : ''}" onclick="markFinished()" ${isFinished ? 'disabled' : ''} style="margin-bottom:0;">
+                                <button id="btn-finish" class="btn-finish ${isFinished ? 'completed' : ''}" onclick="markFinished()" ${isFinished ? 'disabled' : ''} style="margin-bottom:0; width: auto;">
                                     ${isFinished ? '✅ 已達成完課' : '☐ 標記為已完課'}
                                 </button>
                             </div>`;
