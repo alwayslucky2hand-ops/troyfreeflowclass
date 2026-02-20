@@ -281,12 +281,19 @@
                     if (post.status === '已完課') statusBadge = '<span class="class-tag" style="background: var(--accent-green);">✅ 已完課</span>';
                     else if (post.status === '進修中') statusBadge = '<span class="class-tag" style="background: var(--primary-yellow); color: #fff;">▶️ 進修中</span>';
                 }
+                
+                // 🌟 補上：格式化顯示日期
+                let displayDate = post.publishDate ? new Date(post.publishDate).toLocaleDateString() : "未知日期";
+
                 listContainer.innerHTML += `
                     <div class="post-card">
                         <div class="post-title-row"><h3 class="post-title">${post.title}</h3><div>${statusBadge}</div></div>
-                        <div class="post-meta"><span class="meta-cat">${post.category||'未分類'}</span><span>👨‍🏫 ${post.author||'講師'}</span></div>
+                        <div class="post-meta">
+                            <span class="meta-cat">${post.category||'未分類'}</span>
+                            <span>👨‍🏫 ${post.author||'講師'}</span>
+                            <span>🗓️ ${displayDate}</span> </div>
                         <div class="post-excerpt">${post.excerpt||''}</div>
-                        <button onclick="readPost('${post.id}')">進入教室</button>
+                        <button onclick="readPost('${post.id}')" style="margin-bottom:0;">進入教室</button>
                     </div>`;
             });
             if (totalPages > 1) renderPagination(totalPages, paginationContainer);
@@ -318,7 +325,13 @@
             fetch(`${API_URL}?action=getSingleClass&id=${id}&email=${encodeURIComponent(currentUser.email)}`)
                 .then(r => r.json()).then(data => {
                     document.getElementById('detail-title').innerText = data.title;
-                    document.getElementById('detail-meta').innerHTML = `<span class="meta-cat">${data.category}</span>`;
+                    
+                    // 🌟 補上：顯示分類、作者與日期
+                    document.getElementById('detail-meta').innerHTML = `
+                        <span class="meta-cat">${data.category || '未分類'}</span>
+                        <span>👨‍🏫 ${data.author || '講師'}</span>
+                        <span>🗓️ ${data.publishDate || '未知日期'}</span>
+                    `;
 
                     if (data.error) {
                         document.getElementById('detail-content').innerHTML = `<div style="text-align:center; padding:30px; background:#fffbe6; border-radius:12px; border:1px solid var(--primary-yellow);"><h3 style="color:#d4a017; margin-top:0;">🔒 尚未解鎖</h3><p style="color:#8c6b0a; font-weight:bold; margin-bottom:0;">${data.error}</p></div>`;
