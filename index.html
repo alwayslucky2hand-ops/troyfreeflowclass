@@ -61,49 +61,29 @@
         .search-box { width: 100%; background: #f8fafc; border-radius: 12px; }
         
         .login-box input:focus, .comment-box textarea:focus, .search-box:focus {
-            outline: none;
-            border-color: var(--primary-yellow);
-            box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2);
+            outline: none; border-color: var(--primary-yellow); box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2);
         }
         .search-box:focus { background: var(--bg-color); }
         .comment-box textarea { width: 100%; height: 100px; resize: vertical; }
 
         button { 
-            background: var(--primary-yellow); 
-            color: #ffffff; 
-            border: none; 
-            padding: 12px 28px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1rem;
-            transition: background 0.2s;
+            background: var(--primary-yellow); color: #ffffff; border: none; padding: 12px 28px; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background 0.2s;
         }
         button:hover { background: var(--primary-hover); }
 
-        .filter-section {
-            margin-bottom: 35px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            border: 1px solid var(--glass-border);
-        }
+        .filter-section { margin-bottom: 35px; padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); }
         .filter-title { margin-bottom: 12px; font-weight: bold; color: var(--slate-blue); font-size: 0.9em; letter-spacing: 0.05em; }
         .category-nav { display: flex; gap: 12px; margin-bottom: 0; flex-wrap: wrap; }
-        .cat-btn { 
-            background: #f8fafc; color: var(--slate-blue); padding: 8px 20px; 
-            border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.95em; cursor: pointer;
-        }
+        .cat-btn { background: #f8fafc; color: var(--slate-blue); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.95em; cursor: pointer; }
         .cat-btn.active { background: var(--slate-blue); color: #ffffff; border-color: var(--slate-blue); }
 
-        .post-card { 
-            background: #fff; border: 1px solid var(--glass-border); padding: 35px; 
-            margin-bottom: 25px; border-radius: 12px; transition: transform 0.2s ease;
-        }
+        .post-card { background: #fff; border: 1px solid var(--glass-border); padding: 35px; margin-bottom: 25px; border-radius: 12px; transition: transform 0.2s ease; }
         .post-card:hover { transform: translateY(-2px); }
         .post-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .post-title { font-size: 1.5em; margin: 0; color: #2d3436; }
         
-        .class-tag { background: var(--primary-yellow); color: #ffffff; padding: 4px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; }
+        .class-tag { padding: 4px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; color: white; }
         
         .post-meta { font-size: 0.9em; color: var(--slate-blue); margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; }
         .meta-cat { background: #f1f5f9; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--glass-border); }
@@ -111,19 +91,15 @@
 
         #post-detail { display: none; }
         
-        /* 🎓 課程專屬：播放器與講義按鈕 */
-        .video-container {
-            position: relative; padding-bottom: 56.25%; /* 16:9 比例 */ height: 0; overflow: hidden;
-            border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--glass-border);
-        }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border); background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
-        .download-btn {
-            display: inline-block; background: var(--accent-green); color: white;
-            padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;
-            margin-bottom: 30px; transition: background 0.2s;
-        }
-        .download-btn:hover { background: #4e806e; }
+        /* 🎓 進度追蹤操作區 */
+        .progress-actions { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-start { background: var(--primary-yellow); color: #fff; flex: 1; }
+        .btn-finish { background: var(--accent-green); color: #fff; flex: 1; }
+        .btn-download { background: #e2e8f0; color: var(--slate-blue); border: 1px dashed var(--slate-blue); flex: 1; text-align: center; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; }
+        .btn-download:hover { background: var(--slate-blue); color: white; border-style: solid; }
 
         .comment-box { margin-top: 50px; border-top: 2px dashed var(--glass-border); padding-top: 30px; }
         .comment-item { background: #fafafa; padding: 16px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent-green); color: #2d3436; }
@@ -139,6 +115,7 @@
             .login-box input, button, .page-btn { width: 100%; margin: 0 0 10px 0; } 
             .post-title-row { flex-direction: column; gap: 10px; }
             #search-section { padding: 25px 20px !important; }
+            .progress-actions { flex-direction: column; }
         }
     </style>
 </head>
@@ -147,8 +124,8 @@
     <h1> 🎓 特洛伊AI賦能學院 - 線上課程 </h1>
 
     <div class="section login-box" id="login-section">
-        <h3 style="margin-top:0;">會員通行證</h3>
-        <p id="login-status" style="color: var(--slate-blue); font-size: 0.95em; margin-bottom: 20px;">目前狀態：未登入 (請登入以解鎖課程影音)</p>
+        <h3 style="margin-top:0;">學員通行證</h3>
+        <p id="login-status" style="color: var(--slate-blue); font-size: 0.95em; margin-bottom: 20px;">目前狀態：未登入 (登入解鎖課程並紀錄學習進度)</p>
         
         <div id="step-1">
             <input type="email" id="email" placeholder="輸入會員 Email">
@@ -200,15 +177,13 @@
 
     <script>
         // ⚠️ 請填入你最新部署的 Google Apps Script 網址
-        const API_URL = 'https://script.google.com/macros/s/AKfycbylFxcrd91N6lJImFG3OzHmdhtO6kVAhS0leYYoo4Xwirwoa__v8PqofVcFWYFzCOPkYA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxOSpeXYU9UHrh3yjsHk2lRhA6mMfJUD4yFBxjqhVDDvmVL9iRAFPeWbIDvVQnqT1BPHw/exec';
 
         let currentUser = { email: '', verified: false };
         let allClassesData = []; 
         let currentPostId = null;
-        
         let currentCategory = '全部'; 
         let currentSearchQuery = '';
-
         let currentPage = 1;
         const postsPerPage = 10;
 
@@ -258,6 +233,9 @@
                 document.getElementById('step-1').style.display = 'block';
                 document.getElementById('step-2').style.display = 'none';
                 document.getElementById('otp-code').value = '';
+                
+                // 登入後重新獲取課程列表 (為了顯示個人進度標籤)
+                fetchClasses();
             });
         }
 
@@ -269,12 +247,17 @@
         function logout() {
             currentUser = { email: '', verified: false };
             document.getElementById('email').value = '';
-            document.getElementById('login-status').innerText = '目前狀態：未登入 (請登入以解鎖課程影音)';
+            document.getElementById('login-status').innerText = '目前狀態：未登入 (登入解鎖課程並紀錄學習進度)';
+            fetchClasses(); // 登出後刷新清空標籤
         }
 
         // --- 讀取課程列表 ---
         function fetchClasses() {
-            fetch(`${API_URL}?action=getClassList`)
+            // 🌟 傳入 currentUser.email 讓後端比對進度
+            let url = `${API_URL}?action=getClassList`;
+            if (currentUser.email) url += `&email=${encodeURIComponent(currentUser.email)}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(classes => {
                     allClassesData = classes; 
@@ -321,12 +304,8 @@
 
             let filteredPosts = allClassesData;
 
-            // 1. 分類過濾
-            if (currentCategory !== '全部') {
-                filteredPosts = filteredPosts.filter(post => post.category === currentCategory);
-            }
+            if (currentCategory !== '全部') filteredPosts = filteredPosts.filter(post => post.category === currentCategory);
 
-            // 2. 關鍵字過濾
             if (currentSearchQuery) {
                 filteredPosts = filteredPosts.filter(post => {
                     const searchStr = `${post.title||''} ${post.category||''} ${post.author||''} ${post.excerpt||''}`.toLowerCase();
@@ -346,11 +325,18 @@
             postsToShow.forEach(post => {
                 let displayDate = post.publishDate ? new Date(post.publishDate).toLocaleDateString() : "未知日期";
                 
+                // 🌟 依據後端傳來的 status 渲染不同顏色的標籤
+                let statusBadge = '<span class="class-tag" style="background: var(--slate-blue);">🔒 未修課</span>';
+                if (currentUser.email) {
+                    if (post.status === '已完課') statusBadge = '<span class="class-tag" style="background: var(--accent-green);">✅ 已完課</span>';
+                    else if (post.status === '進修中') statusBadge = '<span class="class-tag" style="background: var(--primary-yellow); color: #fff;">▶️ 進修中</span>';
+                }
+
                 const postHTML = `
                     <div class="post-card">
                         <div class="post-title-row">
                             <h3 class="post-title">${post.title}</h3>
-                            <div><span class="class-tag">🎥 專屬課程</span></div>
+                            <div>${statusBadge}</div>
                         </div>
                         <div class="post-meta">
                             <span class="meta-cat">${post.category || '未分類'}</span>
@@ -384,15 +370,27 @@
             container.appendChild(div);
         }
 
-        // --- 將 Google Drive 網址轉換為 iframe 預覽網址 ---
         function getDriveIframeUrl(url) {
             if (!url) return '';
-            // 替換 /view 為 /preview，讓 iframe 可以直接播放
             const match = url.match(/\/d\/(.+?)\//);
-            if (match && match[1]) {
-                return `https://drive.google.com/file/d/${match[1]}/preview`;
-            }
+            if (match && match[1]) return `https://drive.google.com/file/d/${match[1]}/preview`;
             return url;
+        }
+
+        // --- 寫入進度 API ---
+        function markProgress(type) {
+            if (!currentUser.email) return alert("請先登入");
+            
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    action: 'updateProgress', 
+                    payload: { id: currentPostId, email: currentUser.email, type: type } 
+                })
+            }).then(() => {
+                if(type === 'start') alert("紀錄成功！祝您學習順利。");
+                if(type === 'finish') alert("恭喜完課！進度已更新。");
+            });
         }
 
         // --- 讀取單一課程 ---
@@ -425,10 +423,12 @@
                             </div>
                         `;
                     } else {
-                        // 組合完整內容：影片 iframe + 內文 + 講義按鈕
+                        // 🌟 成功解鎖：背景偷偷記錄「已入場 (enter)」
+                        fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProgress', payload: { id: id, email: currentUser.email, type: 'enter' } }) });
+
                         let fullContent = '';
                         
-                        // 1. 產生影片播放器
+                        // 1. 影片播放器
                         if (data.film) {
                             const iframeUrl = getDriveIframeUrl(data.film);
                             fullContent += `
@@ -438,17 +438,20 @@
                             `;
                         }
 
-                        // 2. 講義下載按鈕
+                        // 2. 互動按鈕區塊 (進度追蹤 + 講義下載)
+                        fullContent += `<div class="progress-actions">`;
+                        fullContent += `<button class="btn-start" onclick="markProgress('start')">▶️ 標記為進修中</button>`;
+                        fullContent += `<button class="btn-finish" onclick="markProgress('finish')">✅ 標記已完課</button>`;
                         if (data.handouts) {
-                            fullContent += `<a href="${data.handouts}" target="_blank" class="download-btn">📥 下載本課專屬講義</a><br><br>`;
+                            fullContent += `<a href="${data.handouts}" target="_blank" class="btn-download">📥 下載講義</a>`;
                         }
+                        fullContent += `</div>`;
 
                         // 3. 課程文字說明
                         fullContent += `<div>${data.content || ''}</div>`;
 
                         document.getElementById('detail-content').innerHTML = fullContent;
                         
-                        // 顯示討論區
                         document.getElementById('comment-section').style.display = 'block';
                         renderComments(data.comments);
                     }
@@ -473,12 +476,12 @@
 
             document.getElementById('btn-submit-comment').innerText = '傳送中...';
 
-            // 注意：這裡是呼叫 addClassComment，將留言寫入 Class 工作表
+            // 🌟 寫入留言，並附上 email 讓後端記錄
             fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify({ 
                     action: 'addClassComment', 
-                    payload: { id: currentPostId, comment: commentText } 
+                    payload: { id: currentPostId, email: currentUser.email, comment: commentText } 
                 })
             })
             .then(res => res.json())
@@ -498,6 +501,8 @@
             document.getElementById('search-section').style.display = 'block'; 
             document.getElementById('post-list-section').style.display = 'block';
             currentPostId = null;
+            // 返回時重新抓取課程列表，更新卡片上的進度標籤
+            fetchClasses();
             document.getElementById('search-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
