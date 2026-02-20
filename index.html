@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>🎓 特洛伊AI賦能學院 - 專屬課程</title>
+    <style>
+        /* ==========================================
+           🎨 品牌專屬視覺 (灰綠色與芥末暖黃)
+           ========================================== */
+        :root {
+            --primary-yellow: #E1B12C;     
+            --primary-hover: #C89D26;      
+            --slate-blue: #708090;         
+            --accent-green: #619A86;       
+            --danger-color: #e17055;
+            --bg-color: #FFFFFF;           
+            --text-main: #333333;          
+            --text-muted: #64748b;
+            --glass-border: #cbd5e1;       
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif; 
+            line-height: 1.8; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background: var(--bg-color); 
+            color: var(--text-main); 
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 { 
+            font-family: 'Microsoft JhengHei', sans-serif; 
+            font-weight: bold; 
+            color: var(--slate-blue); 
+            letter-spacing: 0.05em;
+        }
+
+        .section { 
+            background: #ffffff; 
+            padding: 40px; 
+            margin-bottom: 40px; 
+            border-radius: 12px; 
+            border: 1px solid var(--glass-border);
+        }
+
+        .login-box input, .comment-box textarea, .search-box { 
+            padding: 14px 18px; 
+            margin: 5px 10px 15px 0; 
+            border: 1px solid var(--glass-border); 
+            border-radius: 8px; 
+            font-size: 1rem;
+            font-family: 'Microsoft JhengHei', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .login-box input { width: calc(50% - 15px); }
+        .search-box { width: 100%; background: #f8fafc; border-radius: 12px; }
+        
+        .login-box input:focus, .comment-box textarea:focus, .search-box:focus {
+            outline: none;
+            border-color: var(--primary-yellow);
+            box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2);
+        }
+        .search-box:focus { background: var(--bg-color); }
+        .comment-box textarea { width: 100%; height: 100px; resize: vertical; }
+
+        button { 
+            background: var(--primary-yellow); 
+            color: #ffffff; 
+            border: none; 
+            padding: 12px 28px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        button:hover { background: var(--primary-hover); }
+
+        .filter-section {
+            margin-bottom: 35px; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--glass-border);
+        }
+        .filter-title { margin-bottom: 12px; font-weight: bold; color: var(--slate-blue); font-size: 0.9em; letter-spacing: 0.05em; }
+        .category-nav { display: flex; gap: 12px; margin-bottom: 0; flex-wrap: wrap; }
+        .cat-btn { 
+            background: #f8fafc; color: var(--slate-blue); padding: 8px 20px; 
+            border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.95em; cursor: pointer;
+        }
+        .cat-btn.active { background: var(--slate-blue); color: #ffffff; border-color: var(--slate-blue); }
+
+        .post-card { 
+            background: #fff; border: 1px solid var(--glass-border); padding: 35px; 
+            margin-bottom: 25px; border-radius: 12px; transition: transform 0.2s ease;
+        }
+        .post-card:hover { transform: translateY(-2px); }
+        .post-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .post-title { font-size: 1.5em; margin: 0; color: #2d3436; }
+        
+        .class-tag { background: var(--primary-yellow); color: #ffffff; padding: 4px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; }
+        
+        .post-meta { font-size: 0.9em; color: var(--slate-blue); margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .meta-cat { background: #f1f5f9; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--glass-border); }
+        .post-excerpt { color: #636e72; margin-bottom: 25px; }
+
+        #post-detail { display: none; }
+        
+        /* 🎓 課程專屬：播放器與講義按鈕 */
+        .video-container {
+            position: relative; padding-bottom: 56.25%; /* 16:9 比例 */ height: 0; overflow: hidden;
+            border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--glass-border);
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .download-btn {
+            display: inline-block; background: var(--accent-green); color: white;
+            padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;
+            margin-bottom: 30px; transition: background 0.2s;
+        }
+        .download-btn:hover { background: #4e806e; }
+
+        .comment-box { margin-top: 50px; border-top: 2px dashed var(--glass-border); padding-top: 30px; }
+        .comment-item { background: #fafafa; padding: 16px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent-green); color: #2d3436; }
+
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
+        .page-btn { background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        .page-btn.active { background: var(--slate-blue); color: #ffffff; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        @media (max-width: 600px) {
+            body { padding: 20px 15px; } 
+            .section, .post-card { padding: 25px 20px; } 
+            .login-box input, button, .page-btn { width: 100%; margin: 0 0 10px 0; } 
+            .post-title-row { flex-direction: column; gap: 10px; }
+            #search-section { padding: 25px 20px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1> 🎓 特洛伊AI賦能學院 - 線上課程 </h1>
+
+    <div class="section login-box" id="login-section">
+        <h3 style="margin-top:0;">會員通行證</h3>
+        <p id="login-status" style="color: var(--slate-blue); font-size: 0.95em; margin-bottom: 20px;">目前狀態：未登入 (請登入以解鎖課程影音)</p>
+        
+        <div id="step-1">
+            <input type="email" id="email" placeholder="輸入會員 Email">
+            <button onclick="requestOTP()" id="btn-otp">寄送驗證碼</button>
+            <span id="otp-msg" style="color: var(--accent-green); font-size: 0.9em; margin-left: 10px; display: none;">驗證碼已寄出</span>
+        </div>
+        
+        <div id="step-2" style="display: none; margin-top: 10px;">
+            <input type="text" id="otp-code" placeholder="輸入信箱內的 6 位數驗證碼">
+            <button onclick="verifyLogin()">登入解鎖</button>
+            <button onclick="cancelLogin()" style="background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border);">返回</button>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <button onclick="logout()" style="background: var(--danger-color); color: white;">登出</button>
+        </div>
+    </div>
+
+    <div class="section" id="search-section" style="padding: 25px 40px;">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 輸入關鍵字搜尋課程標題、簡介或講師..." oninput="handleSearch()">
+    </div>
+
+    <div class="section" id="post-list-section">
+        <div class="filter-section">
+            <div class="filter-title">課程主題分類</div>
+            <div class="category-nav" id="category-container"></div>
+        </div>
+
+        <div id="loading-list" style="text-align: center; color: var(--slate-blue); padding: 30px;">課程資料同步中，請稍候...</div>
+        <div id="post-list"></div>
+        <div id="pagination-container"></div> 
+    </div>
+
+    <div class="section" id="post-detail">
+        <button onclick="backToList()" style="background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border);">← 返回課程列表</button>
+        <div class="post-meta" id="detail-meta" style="margin-top: 25px;"></div>
+        <h2 id="detail-title" style="margin-top: 5px; font-size: 2em; color: #2d3436;">載入中...</h2>
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 30px 0;">
+        
+        <div id="detail-content" style="font-size: 1.1em; line-height: 2;"></div>
+        
+        <div class="comment-box" id="comment-section" style="display: none;">
+            <h3>💬 課程學習討論區</h3>
+            <div id="comments-list" style="margin-bottom: 20px;"></div>
+            <textarea id="new-comment" placeholder="對這堂課有什麼問題或收穫嗎？留言討論吧！"></textarea>
+            <button onclick="submitComment()" id="btn-submit-comment">送出留言</button>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ 請填入你最新部署的 Google Apps Script 網址
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzVmtY-sVG39dLixOat07uU4SM0_eZq9lKcPiG4mHEEPSTqWMicsy4TmMMIOzojNymTEg/exec';
+
+        let currentUser = { email: '', verified: false };
+        let allClassesData = []; 
+        let currentPostId = null;
+        
+        let currentCategory = '全部'; 
+        let currentSearchQuery = '';
+
+        let currentPage = 1;
+        const postsPerPage = 10;
+
+        window.onload = () => fetchClasses();
+
+        // --- 登入與驗證邏輯 ---
+        function requestOTP() {
+            const emailInput = document.getElementById('email').value;
+            if (!emailInput) return alert('請先輸入 Email'); 
+            
+            document.getElementById('btn-otp').innerText = "寄送中...";
+            document.getElementById('otp-msg').style.display = 'none';
+            
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'requestOTP', payload: { email: emailInput } })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('btn-otp').innerText = "寄送驗證碼";
+                if (data.error) return alert(data.error); 
+                
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('step-2').style.display = 'block';
+                document.getElementById('otp-msg').style.display = 'inline';
+            }).catch(err => {
+                alert("連線錯誤");
+                document.getElementById('btn-otp').innerText = "寄送驗證碼";
+            });
+        }
+
+        function verifyLogin() {
+            const emailInput = document.getElementById('email').value;
+            const otpInput = document.getElementById('otp-code').value;
+            if (!otpInput) return alert('請輸入驗證碼'); 
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'verifyOTP', payload: { email: emailInput, otp: otpInput } })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) return alert(data.error); 
+                
+                currentUser = { email: emailInput, verified: true };
+                document.getElementById('login-status').innerText = `✅ 目前狀態：已登入 (${emailInput})`;
+                document.getElementById('step-1').style.display = 'block';
+                document.getElementById('step-2').style.display = 'none';
+                document.getElementById('otp-code').value = '';
+            });
+        }
+
+        function cancelLogin() {
+            document.getElementById('step-1').style.display = 'block';
+            document.getElementById('step-2').style.display = 'none';
+        }
+
+        function logout() {
+            currentUser = { email: '', verified: false };
+            document.getElementById('email').value = '';
+            document.getElementById('login-status').innerText = '目前狀態：未登入 (請登入以解鎖課程影音)';
+        }
+
+        // --- 讀取課程列表 ---
+        function fetchClasses() {
+            fetch(`${API_URL}?action=getClassList`)
+                .then(response => response.json())
+                .then(classes => {
+                    allClassesData = classes; 
+                    document.getElementById('loading-list').style.display = 'none';
+                    renderCategoryFilters(); 
+                    renderPosts();     
+                });
+        }
+
+        function handleSearch() {
+            currentSearchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentPage = 1; 
+            renderPosts();
+        }
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-container');
+            container.innerHTML = '';
+            
+            let categories = ['全部'];
+            allClassesData.forEach(c => {
+                if (c.category && !categories.includes(c.category)) categories.push(c.category);
+            });
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = cat === currentCategory ? 'cat-btn active' : 'cat-btn';
+                btn.innerText = cat;
+                btn.onclick = () => {
+                    currentCategory = cat;
+                    currentPage = 1; 
+                    renderCategoryFilters(); 
+                    renderPosts(); 
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderPosts() {
+            const listContainer = document.getElementById('post-list');
+            const paginationContainer = document.getElementById('pagination-container');
+            listContainer.innerHTML = ''; 
+            paginationContainer.innerHTML = ''; 
+
+            let filteredPosts = allClassesData;
+
+            // 1. 分類過濾
+            if (currentCategory !== '全部') {
+                filteredPosts = filteredPosts.filter(post => post.category === currentCategory);
+            }
+
+            // 2. 關鍵字過濾
+            if (currentSearchQuery) {
+                filteredPosts = filteredPosts.filter(post => {
+                    const searchStr = `${post.title||''} ${post.category||''} ${post.author||''} ${post.excerpt||''}`.toLowerCase();
+                    return searchStr.includes(currentSearchQuery);
+                });
+            }
+
+            if (filteredPosts.length === 0) {
+                listContainer.innerHTML = '<p style="color: var(--slate-blue); text-align: center; padding: 20px;">找不到符合的課程喔！</p>';
+                return;
+            }
+
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const postsToShow = filteredPosts.slice(startIndex, startIndex + postsPerPage);
+
+            postsToShow.forEach(post => {
+                let displayDate = post.publishDate ? new Date(post.publishDate).toLocaleDateString() : "未知日期";
+                
+                const postHTML = `
+                    <div class="post-card">
+                        <div class="post-title-row">
+                            <h3 class="post-title">${post.title}</h3>
+                            <div><span class="class-tag">🎥 專屬課程</span></div>
+                        </div>
+                        <div class="post-meta">
+                            <span class="meta-cat">${post.category || '未分類'}</span>
+                            <span>👨‍🏫 ${post.author || '講師'}</span>
+                            <span>🗓️ ${displayDate}</span>
+                        </div>
+                        <div class="post-excerpt">${post.excerpt || '點擊觀看課程介紹與影音...'}</div>
+                        <button onclick="readPost('${post.id}')" style="width: 100%;">進入教室</button>
+                    </div>
+                `;
+                listContainer.innerHTML += postHTML;
+            });
+
+            if (totalPages > 1) renderPagination(totalPages, paginationContainer);
+        }
+
+        function renderPagination(totalPages, container) {
+            const div = document.createElement('div');
+            div.className = 'pagination';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = () => {
+                    currentPage = i; renderPosts();
+                    document.getElementById('post-list-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+                div.appendChild(btn);
+            }
+            container.appendChild(div);
+        }
+
+        // --- 將 Google Drive 網址轉換為 iframe 預覽網址 ---
+        function getDriveIframeUrl(url) {
+            if (!url) return '';
+            // 替換 /view 為 /preview，讓 iframe 可以直接播放
+            const match = url.match(/\/d\/(.+?)\//);
+            if (match && match[1]) {
+                return `https://drive.google.com/file/d/${match[1]}/preview`;
+            }
+            return url;
+        }
+
+        // --- 讀取單一課程 ---
+        function readPost(id) {
+            currentPostId = id;
+            document.getElementById('search-section').style.display = 'none'; 
+            document.getElementById('post-list-section').style.display = 'none';
+            document.getElementById('post-detail').style.display = 'block';
+            document.getElementById('comment-section').style.display = 'none'; 
+            document.getElementById('detail-title').innerText = '載入中...';
+            document.getElementById('detail-content').innerText = '正在向系統驗證您的會員權限...';
+            window.scrollTo(0, 0);
+
+            const url = `${API_URL}?action=getSingleClass&id=${id}&email=${encodeURIComponent(currentUser.email)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('detail-title').innerText = data.title;
+                    document.getElementById('detail-meta').innerHTML = `
+                        <span class="meta-cat">${data.category || '未分類'}</span>
+                        <span>👨‍🏫 ${data.author || '講師'}</span>
+                    `;
+
+                    if (data.error) {
+                        document.getElementById('detail-content').innerHTML = `
+                            <div style="background: #fffbe6; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--primary-yellow);">
+                                <h3 style="color: #d4a017; margin-top:0;">🔒 尚未解鎖</h3>
+                                <p style="color: #8c6b0a; font-weight:bold;">${data.error}</p>
+                            </div>
+                        `;
+                    } else {
+                        // 組合完整內容：影片 iframe + 內文 + 講義按鈕
+                        let fullContent = '';
+                        
+                        // 1. 產生影片播放器
+                        if (data.film) {
+                            const iframeUrl = getDriveIframeUrl(data.film);
+                            fullContent += `
+                                <div class="video-container">
+                                    <iframe src="${iframeUrl}" allow="autoplay" allowfullscreen></iframe>
+                                </div>
+                            `;
+                        }
+
+                        // 2. 講義下載按鈕
+                        if (data.handouts) {
+                            fullContent += `<a href="${data.handouts}" target="_blank" class="download-btn">📥 下載本課專屬講義</a><br><br>`;
+                        }
+
+                        // 3. 課程文字說明
+                        fullContent += `<div>${data.content || ''}</div>`;
+
+                        document.getElementById('detail-content').innerHTML = fullContent;
+                        
+                        // 顯示討論區
+                        document.getElementById('comment-section').style.display = 'block';
+                        renderComments(data.comments);
+                    }
+                });
+        }
+
+        function renderComments(comments) {
+            const list = document.getElementById('comments-list');
+            list.innerHTML = '';
+            if (!comments || comments.length === 0) {
+                list.innerHTML = '<p style="color: var(--slate-blue); font-size:0.9em;">目前還沒有人留言，來搶頭香發問吧！</p>';
+                return;
+            }
+            comments.forEach(c => {
+                list.innerHTML += `<div class="comment-item">${c}</div>`;
+            });
+        }
+
+        function submitComment() {
+            const commentText = document.getElementById('new-comment').value.trim();
+            if (!commentText) return alert('請輸入留言內容！'); 
+
+            document.getElementById('btn-submit-comment').innerText = '傳送中...';
+
+            // 注意：這裡是呼叫 addClassComment，將留言寫入 Class 工作表
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    action: 'addClassComment', 
+                    payload: { id: currentPostId, comment: commentText } 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('btn-submit-comment').innerText = '送出留言';
+                if (data.success) {
+                    document.getElementById('new-comment').value = '';
+                    readPost(currentPostId); 
+                } else {
+                    alert('留言失敗：' + data.error);
+                }
+            });
+        }
+
+        function backToList() {
+            document.getElementById('post-detail').style.display = 'none';
+            document.getElementById('search-section').style.display = 'block'; 
+            document.getElementById('post-list-section').style.display = 'block';
+            currentPostId = null;
+            document.getElementById('search-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
