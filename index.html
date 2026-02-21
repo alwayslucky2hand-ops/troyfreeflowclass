@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>🎓 特洛伊AI賦能學院 - 專屬課程</title>
+    <title>特洛伊AI賦能學院 - 專屬課程</title>
     <style>
-        /* ==========================================
-           🎨 品牌專屬視覺 (灰綠色與芥末暖黃)
-           ========================================== */
         :root {
             --primary-yellow: #E1B12C; --primary-hover: #C89D26;      
             --slate-blue: #708090; --accent-green: #619A86;       
@@ -16,69 +13,36 @@
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.8; max-width: 800px; margin: 0 auto; padding: 40px 20px; background: var(--bg-color); color: var(--text-main); min-height: 100vh; }
-        h1, h2, h3 { color: var(--slate-blue); letter-spacing: 0.05em; font-weight: bold; }
+        h1, h2, h3 { color: var(--slate-blue); letter-spacing: 0.05em; font-weight: bold; margin-bottom: 24px; }
         
         .section { background: #ffffff; padding: 40px; margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--glass-border); }
         
-        /* 恢復圓潤與背景色的輸入框 */
-        .input-box { 
-            padding: 14px 18px; 
-            border: 1px solid var(--glass-border); 
-            border-radius: 12px; 
-            font-size: 1rem; 
-            font-family: inherit; 
-            transition: all 0.3s ease; 
-            width: 100%; 
-            margin-bottom: 10px; 
-            background: #f8fafc; 
-        }
-        .input-box:focus { outline: none; border-color: var(--primary-yellow); background: #ffffff; box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2); }
-        .search-box { margin-bottom: 0; }
+        .input-box, textarea { padding: 14px 18px; border: 1px solid var(--glass-border); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.3s ease; width: 100%; margin-bottom: 10px; background: #f8fafc; }
+        .input-box:focus, textarea:focus { outline: none; border-color: var(--primary-yellow); background: #ffffff; box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2); }
         
-        /* 恢復圓潤、無框線、帶輕微陰影的按鈕設計 */
-        button { 
-            background: var(--primary-yellow); 
-            color: #ffffff; 
-            border: none; 
-            padding: 14px 28px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1rem; 
-            transition: background 0.2s, transform 0.1s; 
-            width: 100%; 
-            margin-bottom: 10px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
-        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        button:active { transform: translateY(1px); }
+        button { background: var(--primary-yellow); color: #ffffff; border: none; padding: 14px 28px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background 0.2s; width: 100%; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        button:hover { background: var(--primary-hover); }
         button:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
         
-        /* 針對學員通行證區塊的按鈕微調 */
-        #login-section button { width: auto; min-width: 140px; }
-        #login-section button[onclick="cancelLogin()"] { background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); box-shadow: none; }
-        #login-section button[onclick="logout()"] { background: var(--danger-color); color: white; }
-        
-        /* 留言區按鈕微調 */
-        #btn-submit-comment { width: auto; min-width: 160px; }
-        .post-card button { width: 100%; margin-bottom: 0; }
-
-        /* 內聯訊息顯示 */
         .inline-msg { font-size: 0.9em; font-weight: bold; display: block; margin-top: 5px; min-height: 24px; transition: opacity 0.3s; }
         .msg-error { color: var(--danger-color); }
         .msg-success { color: var(--accent-green); }
 
         .filter-section { margin-bottom: 35px; padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); }
-        .category-nav { display: flex; gap: 12px; flex-wrap: wrap; }
-        .cat-btn { background: #f8fafc; color: var(--slate-blue); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.95em; cursor: pointer; width: auto; margin-bottom:0; box-shadow: none;}
+        .filter-title { margin-bottom: 12px; font-weight: bold; color: var(--slate-blue); font-size: 0.9em; letter-spacing: 0.05em; }
+        .category-nav { display: flex; gap: 12px; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 20px;}
+        .cat-btn { background: #f8fafc; color: var(--slate-blue); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.95em; cursor: pointer; width: auto; margin-bottom:0; box-shadow: none; white-space: nowrap;}
         .cat-btn.active { background: var(--slate-blue); color: #ffffff; border-color: var(--slate-blue); }
-        .cat-btn:hover { background: var(--slate-blue); color: #ffffff; transform: none;}
 
-        .post-card { background: #fff; border: 1px solid var(--glass-border); padding: 35px; margin-bottom: 25px; border-radius: 12px; transition: transform 0.2s ease; }
-        .post-card:hover { transform: translateY(-2px); }
+        .post-card { background: #fff; border: 1px solid var(--glass-border); padding: 35px; margin-bottom: 25px; border-radius: 12px; }
         .post-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .post-title { font-size: 1.5em; margin: 0; color: #2d3436; font-weight: bold; }
-        .class-tag { padding: 4px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; color: white; display: inline-block; white-space: nowrap; }
+        
+        .tag-badge { padding: 4px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; color: white; display: inline-block; white-space: nowrap; }
+        .tag-gray { background: var(--slate-blue); }
+        .tag-green { background: var(--accent-green); }
+        .tag-yellow { background: var(--primary-yellow); color: #fff;}
+        
         .post-meta { font-size: 0.9em; color: var(--slate-blue); margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; }
         .meta-cat { background: #f1f5f9; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--glass-border); }
         .post-excerpt { color: #636e72; margin-bottom: 25px; }
@@ -98,153 +62,180 @@
         .btn-download { background: #e2e8f0; color: var(--slate-blue); border: 1px dashed var(--slate-blue); text-align: center; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; display: block; width: 100%; transition: all 0.2s; margin-bottom: 30px;}
         .btn-download:hover { background: var(--slate-blue); color: white; border-style: solid; }
 
-        .comment-item { background: #fafafa; padding: 16px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent-green); color: #2d3436; }
+        /* 互動與留言區 */
+        .interaction-bar { display: flex; gap: 10px; margin-top: 20px; border-top: 1px dashed var(--glass-border); padding-top: 20px; flex-wrap: wrap; }
+        .btn-interact { background: #f8fafc; color: var(--slate-blue); border: 1px solid var(--glass-border); width: auto; padding: 8px 16px; font-size: 0.95rem; box-shadow: none; margin-bottom: 0; }
+        
+        .comments-wrapper { margin-top: 20px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); }
+        .comment-item { background: #fff; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid var(--accent-green); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .comment-text { font-size: 1rem; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; }
+        
+        .nested-replies { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--glass-border); padding-left: 10px; }
+        .nested-reply-item { margin-bottom: 10px; font-size: 0.95rem; color: #475569; padding-left: 15px; border-left: 2px solid var(--glass-border); white-space: pre-wrap; }
+
+        .system-msg { text-align: center; color: var(--slate-blue); padding: 40px 20px; font-size: 1.1rem; font-weight: bold; }
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
         .page-btn { background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 6px; cursor: pointer; width: auto; margin-bottom: 0; box-shadow: none; }
         .page-btn.active { background: var(--slate-blue); color: #ffffff; }
-        .page-btn:hover { background: var(--slate-blue); color: #ffffff; transform: none;}
+
+        .lock-mask { background: #fffbe6; padding: 20px; text-align: center; border-radius: 8px; color: #8c6b0a; border: 1px solid var(--primary-yellow); margin-top: 15px; font-weight: bold; }
 
         @media (max-width: 600px) { 
             body { padding: 20px 15px; } 
             .section, .post-card { padding: 25px 20px; } 
             .post-title-row { flex-direction: column; gap: 10px; } 
-            #search-section { padding: 25px 20px !important; }
             #step-1, #step-2 div { flex-direction: column; align-items: stretch; }
             #email, #otp-code { max-width: 100% !important; }
-            #login-section button { width: 100%; }
+            #login-section button { width: 100%; min-width: auto !important; }
         }
     </style>
 </head>
 <body>
 
-    <h1> 🎓 特洛伊AI賦能學院 </h1>
+    <h1>特洛伊AI賦能學院</h1>
 
     <div class="section" id="login-section">
-        <h3 style="margin-top:0;">學員通行證</h3>
-        <p id="login-status" style="color: var(--slate-blue); font-size: 0.95em; margin-bottom: 20px;">目前狀態：未登入 (登入解鎖課程並紀錄進度)</p>
+        <h3 style="margin-top:0;">會員通行證</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+            為保障會員權益，本學院課程需登入會員方能觀看。登入後將自動解鎖影音內容，並系統化紀錄您的進修進度與互動留言。
+        </p>
+        <p id="login-status" style="color: var(--slate-blue); font-weight: bold; margin-bottom: 15px;">目前狀態：未登入 (訪客)</p>
         
         <div id="step-1" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
             <input type="email" id="email" class="input-box" placeholder="輸入會員 Email" style="flex: 2; max-width: 300px; margin-bottom: 0;">
-            <button onclick="requestOTP()" id="btn-otp" style="flex: 1; margin-bottom: 0;">寄送驗證碼</button>
-            <span id="otp-msg" class="inline-msg" style="width: 100%; text-align: left;"></span>
+            <button onclick="requestOTP()" id="btn-otp" style="flex: 1; margin-bottom: 0; width: auto; min-width: 120px;">寄送驗證碼</button>
+            <span id="otp-msg" class="inline-msg" style="width: 100%;"></span>
         </div>
         
         <div id="step-2" style="display: none; margin-top: 10px;">
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
-                <input type="text" id="otp-code" class="input-box" placeholder="輸入信箱內的 6 位數驗證碼" style="flex: 2; max-width: 300px; margin-bottom: 0;">
-                <button onclick="verifyLogin()" id="btn-login" style="flex: 1; margin-bottom: 0;">登入解鎖</button>
-                <button onclick="cancelLogin()" style="flex: 1; margin-bottom: 0;">返回</button>
+                <input type="text" id="otp-code" class="input-box" placeholder="輸入 6 位數驗證碼" style="flex: 2; max-width: 300px; margin-bottom: 0;">
+                <button onclick="verifyLogin()" id="btn-login" style="flex: 1; margin-bottom: 0; width: auto; min-width: 120px;">登入通行</button>
+                <button onclick="cancelLogin()" style="flex: 1; margin-bottom: 0; width: auto; min-width: 80px; background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border);">返回</button>
             </div>
-            <span id="login-msg" class="inline-msg" style="width: 100%; text-align: left;"></span>
+            <span id="login-msg" class="inline-msg" style="width: 100%;"></span>
         </div>
         
-        <div style="margin-top: 25px; border-top: 1px dashed var(--glass-border); padding-top: 20px;">
-            <button onclick="logout()" style="width: auto;">登出</button>
+        <div id="logout-btn-container" style="display: none; margin-top: 25px; border-top: 1px dashed var(--glass-border); padding-top: 20px;">
+            <button onclick="logout()" style="background: var(--danger-color); width: auto;">登出</button>
         </div>
     </div>
 
     <div class="section" id="search-section" style="padding: 25px 40px;">
-        <input type="text" id="searchInput" class="input-box search-box" placeholder="🔍 搜尋課程標題或簡介..." oninput="handleSearch()">
+        <input type="text" id="searchInput" class="input-box search-box" placeholder="輸入關鍵字搜尋課程標題或簡介..." oninput="handleSearch()">
     </div>
 
     <div class="section" id="post-list-section">
         <div class="filter-section">
-            <div style="margin-bottom: 12px; font-weight: bold; color: var(--slate-blue); font-size: 0.9em;">主題分類</div>
+            <div class="filter-title">主題分類</div>
             <div class="category-nav" id="category-container"></div>
         </div>
-        <div id="loading-list" style="text-align: center; color: var(--slate-blue); padding: 30px;">課程載入中...</div>
+        <div id="loading-list" class="system-msg">課程資料同步中，請稍候...</div>
         <div id="post-list"></div>
-        <div id="pagination-container"></div> 
+        <div id="pagination-container" class="pagination"></div> 
     </div>
 
     <div class="section" id="post-detail">
-        <button onclick="backToList()" style="background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); width: auto; box-shadow: none;">← 返回列表</button>
+        <button onclick="backToList()" style="background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); width: auto; box-shadow: none;">返回課程列表</button>
         <div class="post-meta" id="detail-meta" style="margin-top: 25px;"></div>
         <h2 id="detail-title" style="margin-top: 5px; font-size: 2em;">載入中...</h2>
         <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 30px 0;">
         
-        <div id="detail-content"></div>
+        <div id="detail-content" style="font-size: 1.1em; line-height: 2;"></div>
+        <div id="interaction-container"></div>
         
-        <div id="comment-section" style="display: none; margin-top: 50px; border-top: 2px dashed var(--glass-border); padding-top: 30px;">
-            <h3>💬 課程討論區</h3>
-            <div id="comments-list" style="margin-bottom: 20px;"></div>
-            <textarea id="new-comment" class="input-box" placeholder="有什麼問題或收穫嗎？留言吧！" style="height: 80px; margin-bottom: 15px; resize: vertical;"></textarea>
-            <button onclick="submitComment()" id="btn-submit-comment">送出留言</button>
-            <span id="comment-msg" class="inline-msg" style="text-align: left;"></span>
+        <div id="comment-section" style="display: none; margin-top: 40px;">
+            <h3 style="margin-bottom: 20px;">課程討論</h3>
+            <div id="comments-list"></div>
+            
+            <div id="main-reply-box" style="margin-top:20px; border-top:2px solid var(--glass-border); padding-top:20px;">
+                <strong style="color:var(--slate-blue); display:block; margin-bottom:10px;">新增主討論</strong>
+                <textarea id="new-comment" class="input-box" placeholder="對於這堂課有任何收穫或問題嗎？留言吧！" style="height: 80px; margin-bottom: 10px; resize: vertical;"></textarea>
+                <button onclick="submitComment('main', null, this)" style="width: auto;">送出留言</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // ⚠️ 請替換為你最新部署的 API 網址
-        const API_URL = 'https://script.google.com/macros/s/AKfycbygByJobtLcQIOA9RVETiDaB4K9OFyLA_9Iw1iJ3zGH5bdnRBlOeHZa5SxH0hyvHKfzbQ/exec';
+        // 🚨 替換為你最新部署的 API 網址
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyUOsvN_KljNLQpkJ4jpkQCBsb-IMN0l8XNhN546fUBfOt7sLBDInK_oEGn1eZwN5C53Q/exec';
 
-        let currentUser = { email: '', verified: false };
+        let currentUserEmail = ''; 
         let allClassesData = []; 
         let currentPostId = null;
         let currentFilmUrl = '';
         let currentCategory = '全部'; 
-        let currentSearchQuery = '';
+        let currentSearchQuery = ''; 
         let currentPage = 1;
         const postsPerPage = 10;
 
         window.onload = () => fetchClasses();
 
-        // --- 無彈窗訊息提示器 ---
-        function showMsg(elementId, text, isError = false) {
-            const el = document.getElementById(elementId);
+        function showMsg(id, text, isError = false) {
+            const el = document.getElementById(id);
             el.innerText = text;
-            el.className = isError ? 'inline-msg msg-error' : 'inline-msg msg-success';
+            el.className = `inline-msg ${isError ? 'msg-error' : 'msg-success'}`;
             setTimeout(() => el.innerText = '', 4000);
         }
 
-        // --- 登入與驗證邏輯 ---
+        function toggleElement(id) {
+            const el = document.getElementById(id);
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // --- 登入機制 ---
         function requestOTP() {
-            const emailInput = document.getElementById('email').value.trim();
-            if (!emailInput) return showMsg('otp-msg', '請先輸入 Email', true);
+            const email = document.getElementById('email').value.trim();
+            if (!email) return showMsg('otp-msg', '請先輸入 Email', true);
             
             document.getElementById('btn-otp').innerText = "寄送中...";
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'requestOTP', payload: { email: emailInput } }) })
-            .then(res => res.json())
-            .then(data => {
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'requestOTP', payload: { email } }) })
+            .then(res => res.json()).then(data => {
                 document.getElementById('btn-otp').innerText = "寄送驗證碼";
-                if (data.error) return showMsg('otp-msg', data.error, true);
-                
+                if (data.error) {
+                    alert(data.error); 
+                    return showMsg('otp-msg', '', true);
+                }
                 document.getElementById('step-1').style.display = 'none';
                 document.getElementById('step-2').style.display = 'block';
-                showMsg('login-msg', '✅ 驗證碼已寄出，請去信箱查看');
-            }).catch(() => { document.getElementById('btn-otp').innerText = "寄送驗證碼"; showMsg('otp-msg', '連線失敗，請稍後再試', true); });
+                showMsg('login-msg', '驗證碼已寄出，請去信箱查看');
+            }).catch(() => { document.getElementById('btn-otp').innerText = "寄送驗證碼"; showMsg('otp-msg', '連線失敗', true); });
         }
 
         function verifyLogin() {
-            const emailInput = document.getElementById('email').value.trim();
-            const otpInput = document.getElementById('otp-code').value.trim();
-            if (!otpInput) return showMsg('login-msg', '請輸入驗證碼', true);
+            const email = document.getElementById('email').value.trim();
+            const otp = document.getElementById('otp-code').value.trim();
+            if (!otp) return showMsg('login-msg', '請輸入驗證碼', true);
 
             document.getElementById('btn-login').innerText = "驗證中...";
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyOTP', payload: { email: emailInput, otp: otpInput } }) })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('btn-login').innerText = "登入解鎖";
-                if (data.error) return showMsg('login-msg', data.error, true);
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyOTP', payload: { email, otp } }) })
+            .then(res => res.json()).then(data => {
+                document.getElementById('btn-login').innerText = "登入通行";
+                if (data.error) {
+                    alert(data.error); 
+                    return showMsg('login-msg', '', true);
+                }
                 
-                currentUser = { email: emailInput, verified: true };
-                document.getElementById('login-status').innerText = `✅ 已登入 (${emailInput})`;
-                document.getElementById('step-1').style.display = 'block';
+                currentUserEmail = email;
+                document.getElementById('login-status').innerText = `✅ 已登入學員：${email}`;
+                document.getElementById('step-1').style.display = 'none';
                 document.getElementById('step-2').style.display = 'none';
-                document.getElementById('otp-code').value = '';
+                document.getElementById('logout-btn-container').style.display = 'block';
                 fetchClasses(); 
             });
         }
 
-        function cancelLogin() { document.getElementById('step-1').style.display = 'block'; document.getElementById('step-2').style.display = 'none'; }
-        function logout() { currentUser = { email: '', verified: false }; document.getElementById('email').value = ''; document.getElementById('login-status').innerText = '目前狀態：未登入 (登入解鎖課程並紀錄進度)'; fetchClasses(); }
+        function cancelLogin() { document.getElementById('step-1').style.display = 'flex'; document.getElementById('step-2').style.display = 'none'; }
+        function logout() { currentUserEmail = ''; document.getElementById('email').value = ''; document.getElementById('otp-code').value = ''; document.getElementById('login-status').innerText = '目前狀態：未登入 (訪客)'; document.getElementById('step-1').style.display = 'flex'; document.getElementById('logout-btn-container').style.display = 'none'; fetchClasses(); }
 
-        // --- 讀取課程列表 ---
+        // --- 載入與渲染列表 ---
         function fetchClasses() {
             let url = `${API_URL}?action=getClassList`;
-            if (currentUser.email) url += `&email=${encodeURIComponent(currentUser.email)}`;
+            if (currentUserEmail) url += `&email=${encodeURIComponent(currentUserEmail)}`;
+            
             fetch(url).then(r => r.json()).then(classes => {
-                allClassesData = classes; document.getElementById('loading-list').style.display = 'none';
+                allClassesData = classes; 
+                document.getElementById('loading-list').style.display = 'none';
                 renderCategoryFilters(); renderPosts();     
             });
         }
@@ -255,6 +246,7 @@
             const container = document.getElementById('category-container'); container.innerHTML = '';
             let categories = ['全部'];
             allClassesData.forEach(c => { if (c.category && !categories.includes(c.category)) categories.push(c.category); });
+            
             categories.forEach(cat => {
                 const btn = document.createElement('button'); btn.className = cat === currentCategory ? 'cat-btn active' : 'cat-btn';
                 btn.innerText = cat; btn.onclick = () => { currentCategory = cat; currentPage = 1; renderCategoryFilters(); renderPosts(); };
@@ -266,48 +258,48 @@
             const listContainer = document.getElementById('post-list'); const paginationContainer = document.getElementById('pagination-container');
             listContainer.innerHTML = ''; paginationContainer.innerHTML = ''; 
 
-            let filteredPosts = allClassesData;
-            if (currentCategory !== '全部') filteredPosts = filteredPosts.filter(p => p.category === currentCategory);
-            if (currentSearchQuery) filteredPosts = filteredPosts.filter(p => `${p.title||''} ${p.excerpt||''}`.toLowerCase().includes(currentSearchQuery));
+            let filtered = allClassesData;
+            if (currentCategory !== '全部') filtered = filtered.filter(p => p.category === currentCategory);
+            if (currentSearchQuery) filtered = filtered.filter(p => `${p.title||''} ${p.category||''} ${p.author||''} ${p.excerpt||''}`.toLowerCase().includes(currentSearchQuery));
 
-            if (filteredPosts.length === 0) return listContainer.innerHTML = '<p style="color: var(--slate-blue); text-align: center; padding: 20px;">找不到符合的課程喔！</p>';
+            if (filtered.length === 0) return listContainer.innerHTML = '<p class="system-msg">找不到符合的課程喔！</p>';
 
-            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-            const postsToShow = filteredPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
+            const totalPages = Math.ceil(filtered.length / postsPerPage);
+            const postsToShow = filtered.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
             postsToShow.forEach(post => {
-                let statusBadge = '<span class="class-tag" style="background: var(--slate-blue);">🔒 未修課</span>';
-                if (currentUser.email) {
-                    if (post.status === '已完課') statusBadge = '<span class="class-tag" style="background: var(--accent-green);">✅ 已完課</span>';
-                    else if (post.status === '進修中') statusBadge = '<span class="class-tag" style="background: var(--primary-yellow); color: #fff;">▶️ 進修中</span>';
+                let statusBadge = '<span class="tag-badge tag-gray">未修課</span>';
+                if (currentUserEmail) {
+                    if (post.status === '已完課') statusBadge = '<span class="tag-badge tag-green">已完課</span>';
+                    else if (post.status === '進修中') statusBadge = '<span class="tag-badge tag-yellow">進修中</span>';
                 }
                 
-                // 🌟 補上：格式化顯示日期
-                let displayDate = post.publishDate ? new Date(post.publishDate).toLocaleDateString() : "未知日期";
-
                 listContainer.innerHTML += `
                     <div class="post-card">
                         <div class="post-title-row"><h3 class="post-title">${post.title}</h3><div>${statusBadge}</div></div>
                         <div class="post-meta">
                             <span class="meta-cat">${post.category||'未分類'}</span>
-                            <span>👨‍🏫 ${post.author||'講師'}</span>
-                            <span>🗓️ ${displayDate}</span> </div>
+                            <span>講師：${post.author||'特洛伊'}</span>
+                            <span>發佈：${post.publishDate}</span>
+                            <span>入場數：${post.enterCount}</span>
+                            <span>選修數：${post.startCount}</span>
+                            <span>完課數：${post.finishCount}</span>
+                            <span>留言數：${post.commentCount}</span>
+                        </div>
                         <div class="post-excerpt">${post.excerpt||''}</div>
                         <button onclick="readPost('${post.id}')" style="margin-bottom:0;">進入教室</button>
                     </div>`;
             });
-            if (totalPages > 1) renderPagination(totalPages, paginationContainer);
-        }
 
-        function renderPagination(totalPages, container) {
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button'); btn.className = `page-btn ${i === currentPage ? 'active' : ''}`; btn.innerText = i;
-                btn.onclick = () => { currentPage = i; renderPosts(); document.getElementById('post-list-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-                container.appendChild(btn);
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button'); btn.className = `page-btn ${i === currentPage ? 'active' : ''}`; btn.innerText = i;
+                    btn.onclick = () => { currentPage = i; renderPosts(); document.getElementById('post-list-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+                    paginationContainer.appendChild(btn);
+                }
             }
         }
 
-        // 轉換 Drive 網址供 iframe 使用
         function getDriveIframeUrl(url) {
             if (!url) return '';
             const match = url.match(/\/d\/(.+?)\//);
@@ -317,67 +309,80 @@
 
         // --- 進入課程與解鎖邏輯 ---
         function readPost(id) {
-            currentPostId = id; document.getElementById('search-section').style.display = 'none'; document.getElementById('post-list-section').style.display = 'none';
-            document.getElementById('post-detail').style.display = 'block'; document.getElementById('comment-section').style.display = 'none'; 
-            document.getElementById('detail-title').innerText = '載入中...'; document.getElementById('detail-content').innerHTML = '<p style="text-align:center; color:var(--text-muted);">驗證權限中...</p>';
+            currentPostId = id; 
+            document.getElementById('search-section').style.display = 'none'; 
+            document.getElementById('post-list-section').style.display = 'none';
+            document.getElementById('post-detail').style.display = 'block'; 
+            document.getElementById('comment-section').style.display = 'none'; 
+            document.getElementById('interaction-container').innerHTML = '';
+            document.getElementById('detail-title').innerText = '載入中...'; 
+            document.getElementById('detail-content').innerHTML = '<p class="system-msg">正在驗證權限與提取內容...</p>';
             window.scrollTo(0, 0);
 
-            fetch(`${API_URL}?action=getSingleClass&id=${id}&email=${encodeURIComponent(currentUser.email)}`)
-                .then(r => r.json()).then(data => {
-                    document.getElementById('detail-title').innerText = data.title;
+            let url = `${API_URL}?action=getSingleClass&id=${id}`;
+            if (currentUserEmail) url += `&email=${encodeURIComponent(currentUserEmail)}`;
+
+            fetch(url).then(r => r.json()).then(data => {
+                document.getElementById('detail-title').innerText = data.title;
+                document.getElementById('detail-meta').innerHTML = `
+                    <span class="meta-cat">${data.category || '未分類'}</span>
+                    <span>講師：${data.author || '特洛伊'}</span>
+                    <span>發佈：${data.publishDate || '未知日期'}</span>
+                    <span>入場數：${data.enterCount || 0}</span>
+                    <span>選修數：${data.startCount || 0}</span>
+                    <span>完課數：${data.finishCount || 0}</span>
+                    <span>留言數：${data.commentCount || 0}</span>
+                `;
+
+                if (data.error && data.requiresLogin) {
+                    document.getElementById('detail-content').innerHTML = `<div class="lock-mask">${data.error}</div>`;
+                } else {
+                    currentFilmUrl = data.film;
+                    let contentHTML = '';
                     
-                    // 🌟 補上：顯示分類、作者與日期
-                    document.getElementById('detail-meta').innerHTML = `
-                        <span class="meta-cat">${data.category || '未分類'}</span>
-                        <span>👨‍🏫 ${data.author || '講師'}</span>
-                        <span>🗓️ ${data.publishDate || '未知日期'}</span>
+                    if (data.film) {
+                        contentHTML += `
+                            <div class="video-wrapper">
+                                <div id="video-unlocker" class="video-unlocker" style="display: ${data.userStatus === '未修課' ? 'block' : 'none'};">
+                                    <p>本影片由系統加密保護。點擊下方按鈕，系統將自動授權您的會員信箱觀看權限並載入影片。</p>
+                                    <button onclick="unlockAndPlay()" id="btn-unlock" style="width: auto; margin:0 auto; display:block;">解鎖並開始進修</button>
+                                </div>
+                                <div id="video-player" class="video-container" style="display: ${data.userStatus !== '未修課' ? 'block' : 'none'};">
+                                    <iframe id="video-iframe" src="${data.userStatus !== '未修課' ? getDriveIframeUrl(data.film) : ''}" allowfullscreen></iframe>
+                                </div>
+                            </div>`;
+                    }
+
+                    const isFinished = data.userStatus === '已完課';
+                    contentHTML += `
+                        <div class="progress-actions">
+                            <button id="btn-finish" class="btn-finish ${isFinished ? 'completed' : ''}" onclick="markFinished()" ${isFinished ? 'disabled' : ''} style="margin-bottom:0; width: auto;">
+                                ${isFinished ? '已達成完課' : '標記為已完課'}
+                            </button>
+                        </div>`;
+                    
+                    if (data.handouts) contentHTML += `<a href="${data.handouts}" target="_blank" class="btn-download">下載本課講義</a>`;
+                    contentHTML += `<div style="font-size:1.1em; line-height:1.8;">${data.content || ''}</div>`;
+
+                    document.getElementById('detail-content').innerHTML = contentHTML;
+
+                    document.getElementById('interaction-container').innerHTML = `
+                        <div class="interaction-bar">
+                            <button class="btn-interact" onclick="toggleElement('comment-section')">留言討論 (${data.commentCount})</button>
+                        </div>
                     `;
 
-                    if (data.error) {
-                        document.getElementById('detail-content').innerHTML = `<div style="text-align:center; padding:30px; background:#fffbe6; border-radius:12px; border:1px solid var(--primary-yellow);"><h3 style="color:#d4a017; margin-top:0;">🔒 尚未解鎖</h3><p style="color:#8c6b0a; font-weight:bold; margin-bottom:0;">${data.error}</p></div>`;
-                    } else {
-                        currentFilmUrl = data.film;
-                        let contentHTML = '';
-                        
-                        // 🌟 影片防護罩 UI 
-                        if (data.film) {
-                            contentHTML += `
-                                <div class="video-wrapper">
-                                    <div id="video-unlocker" class="video-unlocker" style="display: ${data.userStatus === '未修課' ? 'block' : 'none'};">
-                                        <p>本影片由系統加密保護。點擊下方按鈕，系統將自動授權觀看權限並載入影片。</p>
-                                        <button onclick="unlockAndPlay()" id="btn-unlock" style="width: auto; margin:0 auto; display:block;">🔓 點擊開始進修並解鎖影片</button>
-                                    </div>
-                                    <div id="video-player" class="video-container" style="display: ${data.userStatus !== '未修課' ? 'block' : 'none'};">
-                                        <iframe id="video-iframe" src="${data.userStatus !== '未修課' ? getDriveIframeUrl(data.film) : ''}" allowfullscreen></iframe>
-                                    </div>
-                                </div>`;
-                        }
-
-                        // 🌟 無痛完課打勾按鈕
-                        const isFinished = data.userStatus === '已完課';
-                        contentHTML += `
-                            <div class="progress-actions">
-                                <button id="btn-finish" class="btn-finish ${isFinished ? 'completed' : ''}" onclick="markFinished()" ${isFinished ? 'disabled' : ''} style="margin-bottom:0; width: auto;">
-                                    ${isFinished ? '✅ 已達成完課' : '☐ 標記為已完課'}
-                                </button>
-                            </div>`;
-                        
-                        if (data.handouts) contentHTML += `<a href="${data.handouts}" target="_blank" class="btn-download">📥 下載本課講義</a>`;
-                        contentHTML += `<div style="font-size:1.1em; line-height:1.8;">${data.content || ''}</div>`;
-
-                        document.getElementById('detail-content').innerHTML = contentHTML;
-                        document.getElementById('comment-section').style.display = 'block';
-                        renderComments(data.comments);
-                    }
-                });
+                    renderComments(data.comments);
+                    document.getElementById('comment-section').style.display = 'block';
+                }
+            });
         }
 
-        // 解鎖並播放影片 
         function unlockAndPlay() {
             const btn = document.getElementById('btn-unlock');
             btn.innerText = "授權解鎖中..."; btn.disabled = true;
             
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'unlockVideo', payload: { id: currentPostId, email: currentUser.email } }) })
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'unlockVideo', payload: { id: currentPostId, email: currentUserEmail } }) })
             .then(() => {
                 document.getElementById('video-unlocker').style.display = 'none';
                 document.getElementById('video-player').style.display = 'block';
@@ -385,39 +390,77 @@
             });
         }
 
-        // 標記完課 
         function markFinished() {
             const btn = document.getElementById('btn-finish');
             btn.innerText = "紀錄中..."; btn.disabled = true;
             
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'finishCourse', payload: { id: currentPostId, email: currentUser.email } }) })
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'finishCourse', payload: { id: currentPostId, email: currentUserEmail } }) })
             .then(() => {
                 btn.className = "btn-finish completed";
-                btn.innerText = "✅ 已達成完課";
+                btn.innerText = "已達成完課";
             });
         }
 
         function renderComments(comments) {
             const list = document.getElementById('comments-list'); list.innerHTML = '';
-            if (comments.length === 0) return list.innerHTML = '<p style="color: var(--slate-blue);">目前還沒有人留言喔！</p>';
-            comments.forEach(c => list.innerHTML += `<div class="comment-item">${c}</div>`);
+            if (!comments || comments.length === 0) return list.innerHTML = '<p style="color: var(--slate-blue);">目前還沒有人留言，搶先發問吧！</p>';
+            
+            let visibleHtml = '';
+            let hiddenHtml = '';
+            let hiddenCount = 0;
+
+            comments.forEach((c, index) => {
+                let repliesHtml = '';
+                if (c.replies && c.replies.length > 0) {
+                    c.replies.forEach(r => repliesHtml += `<div class="nested-reply-item">${r.replace(/\n/g, '<br>')}</div>`);
+                }
+                
+                const itemHtml = `
+                    <div class="comment-item">
+                        <div class="comment-text">${c.main.replace(/\n/g, '<br>')}</div>
+                        <div style="display:flex; gap:10px; margin-top:8px;">
+                            ${c.replies.length > 0 ? `<button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('replies-${currentPostId}-${c.colIndex}')">展開回覆 (${c.replies.length})</button>` : ''}
+                            <button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('reply-form-${currentPostId}-${c.colIndex}')">回覆此樓</button>
+                        </div>
+                        <div id="replies-${currentPostId}-${c.colIndex}" class="nested-replies" style="display:none;">${repliesHtml}</div>
+                        <div id="reply-form-${currentPostId}-${c.colIndex}" style="display:none; margin-top:10px;">
+                            <textarea id="content_${currentPostId}_${c.colIndex}" class="input-box" placeholder="回覆內容..." style="min-height:50px; margin-bottom:5px;"></textarea>
+                            <button onclick="submitComment('reply', ${c.colIndex}, this)" style="width:auto; padding:8px 16px;">送出回覆</button>
+                        </div>
+                    </div>`;
+
+                if (index < 5) {
+                    visibleHtml += itemHtml;
+                } else {
+                    hiddenHtml += itemHtml;
+                    hiddenCount += (1 + c.replies.length);
+                }
+            });
+
+            list.innerHTML = visibleHtml;
+            if (hiddenHtml !== '') {
+                list.innerHTML += `
+                    <div id="hidden-comments-wrapper" style="display:none;">${hiddenHtml}</div>
+                    <button class="btn-interact" style="width:100%; justify-content:center; margin-top:10px;" onclick="toggleElement('hidden-comments-wrapper'); this.style.display='none';">
+                        載入更多討論 (隱藏 ${hiddenCount} 則紀錄)
+                    </button>
+                `;
+            }
         }
 
-        function submitComment() {
-            const text = document.getElementById('new-comment').value.trim();
-            if (!text) return showMsg('comment-msg', '請輸入內容', true); 
+        function submitComment(type, colIndex, btn) {
+            let content = type === 'main' ? document.getElementById(`new-comment`).value.trim() : document.getElementById(`content_${currentPostId}_${colIndex}`).value.trim();
+            if (!content) return alert("請輸入內容");
 
-            const btn = document.getElementById('btn-submit-comment');
-            btn.innerText = '傳送中...'; btn.disabled = true;
+            const originalText = btn.innerText; btn.innerText = '傳送中...'; btn.disabled = true;
 
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addClassComment', payload: { id: currentPostId, email: currentUser.email, comment: text } }) })
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addClassComment', payload: { id: currentPostId, email: currentUserEmail, content, colIndex } }) })
             .then(res => res.json()).then(data => {
-                btn.innerText = '送出留言'; btn.disabled = false;
+                btn.innerText = originalText; btn.disabled = false;
                 if (data.success) {
-                    document.getElementById('new-comment').value = '';
-                    showMsg('comment-msg', '✅ 留言成功！');
+                    if(type === 'main') document.getElementById('new-comment').value = '';
                     readPost(currentPostId); 
-                }
+                } else alert('發生錯誤');
             });
         }
 
@@ -425,8 +468,8 @@
             document.getElementById('post-detail').style.display = 'none';
             document.getElementById('search-section').style.display = 'block'; 
             document.getElementById('post-list-section').style.display = 'block';
-            currentPostId = null; 
-            fetchClasses(); // 刷新外層列表標籤
+            currentPostId = null;
+            fetchClasses(); // 更新數據
             document.getElementById('search-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
