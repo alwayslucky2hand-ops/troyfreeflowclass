@@ -21,7 +21,7 @@
         .input-box:focus, textarea:focus { outline: none; border-color: var(--primary-yellow); background: #ffffff; box-shadow: 0 0 0 3px rgba(225, 177, 44, 0.2); }
         
         button { background: var(--primary-yellow); color: #ffffff; border: none; padding: 14px 28px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background 0.2s; width: 100%; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        button:hover { background: var(--primary-hover); }
+        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
         button:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
         
         .inline-msg { font-size: 0.9em; font-weight: bold; display: block; margin-top: 5px; min-height: 24px; transition: opacity 0.3s; }
@@ -77,6 +77,7 @@
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
         .page-btn { background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 6px; cursor: pointer; width: auto; margin-bottom: 0; box-shadow: none; }
         .page-btn.active { background: var(--slate-blue); color: #ffffff; }
+        .page-btn:hover { background: var(--slate-blue); color: #ffffff; transform: none;}
 
         .lock-mask { background: #fffbe6; padding: 20px; text-align: center; border-radius: 8px; color: #8c6b0a; border: 1px solid var(--primary-yellow); margin-top: 15px; font-weight: bold; }
 
@@ -104,7 +105,7 @@
         <div id="step-1" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
             <input type="email" id="email" class="input-box" placeholder="輸入會員 Email" style="flex: 2; max-width: 300px; margin-bottom: 0;">
             <button onclick="requestOTP()" id="btn-otp" style="flex: 1; margin-bottom: 0; width: auto; min-width: 120px;">寄送驗證碼</button>
-            <span id="otp-msg" class="inline-msg" style="width: 100%;"></span>
+            <span id="otp-msg" class="inline-msg" style="width: 100%; text-align: left;"></span>
         </div>
         
         <div id="step-2" style="display: none; margin-top: 10px;">
@@ -151,17 +152,18 @@
             <div id="main-reply-box" style="margin-top:20px; border-top:2px solid var(--glass-border); padding-top:20px;">
                 <strong style="color:var(--slate-blue); display:block; margin-bottom:10px;">新增主討論</strong>
                 <textarea id="new-comment" class="input-box" placeholder="對於這堂課有任何收穫或問題嗎？留言吧！" style="height: 80px; margin-bottom: 10px; resize: vertical;"></textarea>
-                <button onclick="submitComment('main', null, this)" style="width: auto;">送出留言</button>
+                <button onclick="submitComment('main', null)" style="width: auto;">送出留言</button>
             </div>
         </div>
     </div>
 
     <script>
         // 🚨 替換為你最新部署的 API 網址
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyUOsvN_KljNLQpkJ4jpkQCBsb-IMN0l8XNhN546fUBfOt7sLBDInK_oEGn1eZwN5C53Q/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyS8WA-tIYHDk_jYMxJbG3wlJhuIQ4HWUbQ3AkYrXYv6qPJ9kpmQxkwfO1OrD1sQLSBmQ/exec';
 
         let currentUserEmail = ''; 
         let allClassesData = []; 
+        let currentPostData = null; 
         let currentPostId = null;
         let currentFilmUrl = '';
         let currentCategory = '全部'; 
@@ -180,7 +182,7 @@
 
         function toggleElement(id) {
             const el = document.getElementById(id);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            if(el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
         }
 
         // --- 登入機制 ---
@@ -217,7 +219,7 @@
                 }
                 
                 currentUserEmail = email;
-                document.getElementById('login-status').innerText = `✅ 已登入學員：${email}`;
+                document.getElementById('login-status').innerText = `已登入學員：${email}`;
                 document.getElementById('step-1').style.display = 'none';
                 document.getElementById('step-2').style.display = 'none';
                 document.getElementById('logout-btn-container').style.display = 'block';
@@ -323,6 +325,7 @@
             if (currentUserEmail) url += `&email=${encodeURIComponent(currentUserEmail)}`;
 
             fetch(url).then(r => r.json()).then(data => {
+                currentPostData = data; // 儲存至本地狀態供樂觀 UI 使用
                 document.getElementById('detail-title').innerText = data.title;
                 document.getElementById('detail-meta').innerHTML = `
                     <span class="meta-cat">${data.category || '未分類'}</span>
@@ -331,7 +334,6 @@
                     <span>入場數：${data.enterCount || 0}</span>
                     <span>選修數：${data.startCount || 0}</span>
                     <span>完課數：${data.finishCount || 0}</span>
-                    <span>留言數：${data.commentCount || 0}</span>
                 `;
 
                 if (data.error && data.requiresLogin) {
@@ -348,7 +350,7 @@
                                     <button onclick="unlockAndPlay()" id="btn-unlock" style="width: auto; margin:0 auto; display:block;">解鎖並開始進修</button>
                                 </div>
                                 <div id="video-player" class="video-container" style="display: ${data.userStatus !== '未修課' ? 'block' : 'none'};">
-                                    <iframe id="video-iframe" src="${data.userStatus !== '未修課' ? getDriveIframeUrl(data.film) : ''}" allowfullscreen></iframe>
+                                    <iframe id="video-iframe" src="${data.userStatus !== '未修課' ? getDriveIframeUrl(data.film) : 'about:blank'}" allowfullscreen></iframe>
                                 </div>
                             </div>`;
                     }
@@ -368,7 +370,7 @@
 
                     document.getElementById('interaction-container').innerHTML = `
                         <div class="interaction-bar">
-                            <button class="btn-interact" onclick="toggleElement('comment-section')">留言討論 (${data.commentCount})</button>
+                            <button class="btn-interact" id="btn-comment-toggle" onclick="toggleElement('comment-section')">留言討論 (${data.commentCount})</button>
                         </div>
                     `;
 
@@ -415,17 +417,21 @@
                     c.replies.forEach(r => repliesHtml += `<div class="nested-reply-item">${r.replace(/\n/g, '<br>')}</div>`);
                 }
                 
+                const replyActionHtml = c.isOptimistic 
+                    ? `<span style="font-size:0.85rem; color:var(--text-muted); padding:4px 8px;">同步中...</span>`
+                    : `<button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('reply-form-${currentPostId}-${c.colIndex}')">回覆此樓</button>`;
+
                 const itemHtml = `
                     <div class="comment-item">
                         <div class="comment-text">${c.main.replace(/\n/g, '<br>')}</div>
                         <div style="display:flex; gap:10px; margin-top:8px;">
                             ${c.replies.length > 0 ? `<button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('replies-${currentPostId}-${c.colIndex}')">展開回覆 (${c.replies.length})</button>` : ''}
-                            <button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('reply-form-${currentPostId}-${c.colIndex}')">回覆此樓</button>
+                            ${replyActionHtml}
                         </div>
-                        <div id="replies-${currentPostId}-${c.colIndex}" class="nested-replies" style="display:none;">${repliesHtml}</div>
+                        <div id="replies-${currentPostId}-${c.colIndex}" class="nested-replies" style="display:${c.showReplies ? 'block' : 'none'};">${repliesHtml}</div>
                         <div id="reply-form-${currentPostId}-${c.colIndex}" style="display:none; margin-top:10px;">
                             <textarea id="content_${currentPostId}_${c.colIndex}" class="input-box" placeholder="回覆內容..." style="min-height:50px; margin-bottom:5px;"></textarea>
-                            <button onclick="submitComment('reply', ${c.colIndex}, this)" style="width:auto; padding:8px 16px;">送出回覆</button>
+                            <button onclick="submitComment('reply', ${c.colIndex})" style="width:auto; padding:8px 16px;">送出回覆</button>
                         </div>
                     </div>`;
 
@@ -433,7 +439,7 @@
                     visibleHtml += itemHtml;
                 } else {
                     hiddenHtml += itemHtml;
-                    hiddenCount += (1 + c.replies.length);
+                    hiddenCount += (1 + c.replies.length); 
                 }
             });
 
@@ -448,20 +454,55 @@
             }
         }
 
-        function submitComment(type, colIndex, btn) {
+        // 🌟 已修復：前端傳送 payload.comment 完美對應後端
+        function submitComment(type, colIndex) {
+            if (!currentUserEmail) return alert("請先登入");
+
             let content = type === 'main' ? document.getElementById(`new-comment`).value.trim() : document.getElementById(`content_${currentPostId}_${colIndex}`).value.trim();
             if (!content) return alert("請輸入內容");
 
-            const originalText = btn.innerText; btn.innerText = '傳送中...'; btn.disabled = true;
+            // 1. 本地構建新留言字串
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            const newFormattedText = `[${timeStr}]【${currentUserEmail}】${content}`;
 
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addClassComment', payload: { id: currentPostId, email: currentUserEmail, content, colIndex } }) })
-            .then(res => res.json()).then(data => {
-                btn.innerText = originalText; btn.disabled = false;
-                if (data.success) {
-                    if(type === 'main') document.getElementById('new-comment').value = '';
-                    readPost(currentPostId); 
-                } else alert('發生錯誤');
-            });
+            // 2. 立即更新本地狀態
+            if (type === 'main') {
+                currentPostData.comments.unshift({ colIndex: 'temp', main: newFormattedText, replies: [], isOptimistic: true });
+                document.getElementById('new-comment').value = '';
+            } else {
+                const target = currentPostData.comments.find(c => c.colIndex === colIndex);
+                if (target) {
+                    target.replies.push(newFormattedText);
+                    target.showReplies = true; 
+                }
+            }
+
+            currentPostData.commentCount++;
+            renderComments(currentPostData.comments);
+            
+            const toggleBtn = document.getElementById('btn-comment-toggle');
+            if (toggleBtn) toggleBtn.innerText = `留言討論 (${currentPostData.commentCount})`;
+
+            if (type !== 'main') {
+                const form = document.getElementById(`reply-form-${currentPostId}-${colIndex}`);
+                if(form) form.style.display = 'none';
+            }
+
+            // 3. 背景非同步寫入資料庫 (修復 comment 變數名稱)
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addClassComment', payload: { id: currentPostId, email: currentUserEmail, comment: content, colIndex: colIndex === 'temp' ? null : colIndex } }) })
+            .then(() => {
+                // 4. 背景寫入完成後，默默重新拉取一次確保 colIndex 等結構完全正確
+                let url = `${API_URL}?action=getSingleClass&id=${currentPostId}&email=${encodeURIComponent(currentUserEmail)}`;
+                fetch(url).then(r => r.json()).then(data => {
+                    if (!data.error) {
+                        const expandedCols = currentPostData.comments.filter(c => c.showReplies).map(c => c.colIndex);
+                        data.comments.forEach(c => { if (expandedCols.includes(c.colIndex)) c.showReplies = true; });
+                        currentPostData = data;
+                        renderComments(currentPostData.comments);
+                    }
+                });
+            }).catch(e => console.error("背景同步失敗", e));
         }
 
         function backToList() {
