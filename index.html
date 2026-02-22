@@ -7,9 +7,9 @@
     <style>
         :root {
             --primary-yellow: #E1B12C; --primary-hover: #C89D26;      
-            --slate-blue: #708090; --accent-green: #619A86;       
-            --danger-color: #e17055; --bg-color: #FFFFFF;           
-            --text-main: #333333; --text-muted: #64748b; --glass-border: #cbd5e1;       
+            --slate-blue: #708090; --accent-green: #619A86;        
+            --danger-color: #e17055; --bg-color: #FFFFFF;            
+            --text-main: #333333; --text-muted: #64748b; --glass-border: #cbd5e1;        
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.8; max-width: 800px; margin: 0 auto; padding: 40px 20px; background: var(--bg-color); color: var(--text-main); min-height: 100vh; }
@@ -477,8 +477,19 @@
             const newFormattedText = `[${timeStr}]【${currentUserEmail}】${content}`;
 
             if (type === 'main') {
-                currentPostData.comments.unshift({ colIndex: 'temp', main: newFormattedText, replies: [], isOptimistic: true });
+                // 修改：使用 push 將新留言放置於陣列最後面，確保由上往下顯示
+                currentPostData.comments.push({ colIndex: 'temp', main: newFormattedText, replies: [], isOptimistic: true });
                 document.getElementById('new-comment').value = '';
+                
+                // 額外小優化：確保新增留言後，如果前面有被隱藏的留言區塊會自動打開，這樣發布者才能馬上看到剛發布的留言
+                setTimeout(() => {
+                    const hiddenWrapper = document.getElementById('hidden-comments-wrapper');
+                    if (hiddenWrapper) {
+                        hiddenWrapper.style.display = 'block';
+                        const loadMoreBtn = hiddenWrapper.nextElementSibling;
+                        if (loadMoreBtn && loadMoreBtn.tagName === 'BUTTON') loadMoreBtn.style.display = 'none';
+                    }
+                }, 50);
             } else {
                 const target = currentPostData.comments.find(c => c.colIndex === colIndex);
                 if (target) {
