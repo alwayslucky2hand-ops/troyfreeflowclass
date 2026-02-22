@@ -68,16 +68,14 @@
         
         .comments-wrapper { margin-top: 20px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); }
         .comment-item { background: #fff; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid var(--accent-green); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .comment-text { font-size: 1rem; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; }
         
         .nested-replies { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--glass-border); padding-left: 10px; }
-        .nested-reply-item { margin-bottom: 10px; font-size: 0.95rem; color: #475569; padding-left: 15px; border-left: 2px solid var(--glass-border); white-space: pre-wrap; }
+        .nested-reply-item { margin-bottom: 10px; font-size: 0.95rem; color: #475569; padding-left: 15px; border-left: 2px solid var(--glass-border); }
 
         .system-msg { text-align: center; color: var(--slate-blue); padding: 40px 20px; font-size: 1.1rem; font-weight: bold; }
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
         .page-btn { background: #ffffff; color: var(--slate-blue); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 6px; cursor: pointer; width: auto; margin-bottom: 0; box-shadow: none; }
         .page-btn.active { background: var(--slate-blue); color: #ffffff; }
-        .page-btn:hover { background: var(--slate-blue); color: #ffffff; transform: none;}
 
         .lock-mask { background: #fffbe6; padding: 20px; text-align: center; border-radius: 8px; color: #8c6b0a; border: 1px solid var(--primary-yellow); margin-top: 15px; font-weight: bold; }
 
@@ -159,7 +157,7 @@
 
     <script>
         // 🚨 替換為你最新部署的 API 網址
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyS8WA-tIYHDk_jYMxJbG3wlJhuIQ4HWUbQ3AkYrXYv6qPJ9kpmQxkwfO1OrD1sQLSBmQ/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxecsU3w0sSWLxhERJHC45M_ZWPJydwlPDtvbilGHCiGwueMpfmKI4tj_agTkxuicHNdA/exec';
 
         let currentUserEmail = ''; 
         let allClassesData = []; 
@@ -325,7 +323,7 @@
             if (currentUserEmail) url += `&email=${encodeURIComponent(currentUserEmail)}`;
 
             fetch(url).then(r => r.json()).then(data => {
-                currentPostData = data; // 儲存至本地狀態供樂觀 UI 使用
+                currentPostData = data; 
                 document.getElementById('detail-title').innerText = data.title;
                 document.getElementById('detail-meta').innerHTML = `
                     <span class="meta-cat">${data.category || '未分類'}</span>
@@ -403,6 +401,18 @@
             });
         }
 
+        // 🌟 解析並格式化留言內容 [yyyy/mm/dd hh:mm]【Email】 換行顯示內容
+        function formatCommentDisplay(str) {
+            const match = str.match(/^(\[\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}\]【.*?】)(.*)/s);
+            if (match) {
+                const header = escapeHtml(match[1]);
+                const body = linkify(escapeAndBr(match[2].replace(/^\s+/, '')));
+                return `<div style="font-weight:bold; color:var(--slate-blue); font-size:0.9rem; margin-bottom:4px;">${header}</div><div style="color:var(--text-dark);">${body}</div>`;
+            } else {
+                return `<div style="color:var(--text-dark);">${linkify(escapeAndBr(str))}</div>`;
+            }
+        }
+
         function renderComments(comments) {
             const list = document.getElementById('comments-list'); list.innerHTML = '';
             if (!comments || comments.length === 0) return list.innerHTML = '<p style="color: var(--slate-blue);">目前還沒有人留言，搶先發問吧！</p>';
@@ -414,16 +424,17 @@
             comments.forEach((c, index) => {
                 let repliesHtml = '';
                 if (c.replies && c.replies.length > 0) {
-                    c.replies.forEach(r => repliesHtml += `<div class="nested-reply-item">${r.replace(/\n/g, '<br>')}</div>`);
+                    c.replies.forEach(r => repliesHtml += `<div class="nested-reply-item">${formatCommentDisplay(r)}</div>`);
                 }
                 
+                // 若為樂觀更新且無 colIndex，隱藏回覆按鈕避免報錯
                 const replyActionHtml = c.isOptimistic 
-                    ? `<span style="font-size:0.85rem; color:var(--text-muted); padding:4px 8px;">同步中...</span>`
+                    ? ``
                     : `<button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('reply-form-${currentPostId}-${c.colIndex}')">回覆此樓</button>`;
 
                 const itemHtml = `
                     <div class="comment-item">
-                        <div class="comment-text">${c.main.replace(/\n/g, '<br>')}</div>
+                        ${formatCommentDisplay(c.main)}
                         <div style="display:flex; gap:10px; margin-top:8px;">
                             ${c.replies.length > 0 ? `<button class="btn-interact" style="padding:4px 8px; font-size:0.85rem;" onclick="toggleElement('replies-${currentPostId}-${c.colIndex}')">展開回覆 (${c.replies.length})</button>` : ''}
                             ${replyActionHtml}
@@ -439,7 +450,7 @@
                     visibleHtml += itemHtml;
                 } else {
                     hiddenHtml += itemHtml;
-                    hiddenCount += (1 + c.replies.length); 
+                    hiddenCount += (1 + c.replies.length);
                 }
             });
 
@@ -454,19 +465,17 @@
             }
         }
 
-        // 🌟 已修復：前端傳送 payload.comment 完美對應後端
+        // 🌟 瞬間顯示的樂觀更新邏輯
         function submitComment(type, colIndex) {
             if (!currentUserEmail) return alert("請先登入");
 
             let content = type === 'main' ? document.getElementById(`new-comment`).value.trim() : document.getElementById(`content_${currentPostId}_${colIndex}`).value.trim();
             if (!content) return alert("請輸入內容");
 
-            // 1. 本地構建新留言字串
             const now = new Date();
             const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             const newFormattedText = `[${timeStr}]【${currentUserEmail}】${content}`;
 
-            // 2. 立即更新本地狀態
             if (type === 'main') {
                 currentPostData.comments.unshift({ colIndex: 'temp', main: newFormattedText, replies: [], isOptimistic: true });
                 document.getElementById('new-comment').value = '';
@@ -489,10 +498,9 @@
                 if(form) form.style.display = 'none';
             }
 
-            // 3. 背景非同步寫入資料庫 (修復 comment 變數名稱)
+            // 🌟 傳送參數修正：確保傳送的是 payload.comment 供後端讀取
             fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addClassComment', payload: { id: currentPostId, email: currentUserEmail, comment: content, colIndex: colIndex === 'temp' ? null : colIndex } }) })
             .then(() => {
-                // 4. 背景寫入完成後，默默重新拉取一次確保 colIndex 等結構完全正確
                 let url = `${API_URL}?action=getSingleClass&id=${currentPostId}&email=${encodeURIComponent(currentUserEmail)}`;
                 fetch(url).then(r => r.json()).then(data => {
                     if (!data.error) {
@@ -505,12 +513,16 @@
             }).catch(e => console.error("背景同步失敗", e));
         }
 
+        function escapeHtml(t) { return t.replace(/</g, "<").replace(/>/g, ">"); }
+        function escapeAndBr(t) { return escapeHtml(t).replace(/\n/g, '<br>'); }
+        function linkify(t) { return t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>'); }
+
         function backToList() {
             document.getElementById('post-detail').style.display = 'none';
             document.getElementById('search-section').style.display = 'block'; 
             document.getElementById('post-list-section').style.display = 'block';
             currentPostId = null;
-            fetchClasses(); // 更新數據
+            fetchClasses(); 
             document.getElementById('search-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
