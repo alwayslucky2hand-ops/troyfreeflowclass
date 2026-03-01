@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>特洛伊AI落地學院 - 專屬課程</title>
+    <title>特洛伊AI課程專區</title>
     <style>
         :root {
-            /* 🌟 色彩計畫更新：亮白底色 + 橘色點綴 + 深灰鐵灰框架 */
-            --primary-yellow: #F59E0B; /* 活力橘/琥珀色 (主要按鈕與強調) */
+            --primary-yellow: #F59E0B; 
             --primary-hover: #D97706;  /* 深橘色 (懸停狀態) */     
             --slate-blue: #1F2937;     /* 鐵灰色 (用於標題、按鈕外框、Hover狀態) */ 
             --accent-green: #10B981;   /* 翡翠綠 (用於標籤與完成狀態) */        
@@ -187,7 +186,39 @@
         let currentPage = 1;
         const postsPerPage = 10;
 
-        window.onload = () => fetchClasses();
+        // 🎯 新增：檢查是否已經登入過，且未超過 1 小時
+        function checkAutoLogin() {
+            const savedEmail = localStorage.getItem('troy_user_email');
+            const loginTime = localStorage.getItem('troy_login_time');
+
+            if (savedEmail && loginTime) {
+                const now = new Date().getTime();
+                const timeDiff = now - parseInt(loginTime);
+                const oneHour = 60 * 60 * 1000; // 1小時的毫秒數
+
+                if (timeDiff < oneHour) {
+                    // 尚未過期，自動執行登入畫面切換
+                    currentUserEmail = savedEmail;
+                    document.getElementById('login-status').innerText = `✅ 已登入學員：${currentUserEmail}`;
+                    document.getElementById('step-1').style.display = 'none';
+                    document.getElementById('step-2').style.display = 'none';
+                    document.getElementById('logout-btn-container').style.display = 'block';
+                    
+                    // 刷新一下儲存的時間，讓 1 小時重新計算 (可選)
+                    localStorage.setItem('troy_login_time', now);
+                } else {
+                    // 已經超過 1 小時，清除過期的紀錄
+                    localStorage.removeItem('troy_user_email');
+                    localStorage.removeItem('troy_login_time');
+                }
+            }
+        }
+
+        window.onload = () => {
+            // 🎯 新增：網頁一載入就先檢查有沒有通行證
+            checkAutoLogin();
+            fetchClasses();
+        };
 
         function showMsg(id, text, isError = false) {
             const el = document.getElementById(id);
@@ -239,12 +270,31 @@
                 document.getElementById('step-1').style.display = 'none';
                 document.getElementById('step-2').style.display = 'none';
                 document.getElementById('logout-btn-container').style.display = 'block';
+                
+                // 🎯 新增：登入成功時，把 Email 和當下時間存入瀏覽器
+                localStorage.setItem('troy_user_email', currentUserEmail);
+                localStorage.setItem('troy_login_time', new Date().getTime());
+
                 fetchClasses(); 
             });
         }
 
         function cancelLogin() { document.getElementById('step-1').style.display = 'flex'; document.getElementById('step-2').style.display = 'none'; }
-        function logout() { currentUserEmail = ''; document.getElementById('email').value = ''; document.getElementById('otp-code').value = ''; document.getElementById('login-status').innerText = '目前狀態：未登入 (訪客)'; document.getElementById('step-1').style.display = 'flex'; document.getElementById('logout-btn-container').style.display = 'none'; fetchClasses(); }
+        
+        function logout() { 
+            currentUserEmail = ''; 
+            document.getElementById('email').value = ''; 
+            document.getElementById('otp-code').value = ''; 
+            document.getElementById('login-status').innerText = '目前狀態：未登入 (訪客)'; 
+            document.getElementById('step-1').style.display = 'flex'; 
+            document.getElementById('logout-btn-container').style.display = 'none'; 
+            
+            // 🎯 新增：登出時清除瀏覽器紀錄
+            localStorage.removeItem('troy_user_email');
+            localStorage.removeItem('troy_login_time');
+
+            fetchClasses(); 
+        }
 
         // --- 載入與渲染列表 ---
         function fetchClasses() {
